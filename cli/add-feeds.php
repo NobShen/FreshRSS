@@ -1,5 +1,7 @@
 #!/usr/bin/env php
 # import feeds from a file
+# Assume you installed FreshRSS at /usr/share/FreshRSS and the directory is writable
+# Usage: sudo ./cli/add-feeds --user jetnews --filename feeds13.url
 
 <?php
 require(__DIR__ . '/_cli.php');
