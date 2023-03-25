@@ -1,0 +1,72 @@
+>sudo apt install apache2
+>sudo a2enmod headers expires rewrite ssl
+
+Then, you have to configure Apache. 
+You can create a file in /etc/apache2/sites-available, by copying:
+>sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/freshrss.conf
+Modify freshrss.conf to the following (see https://freshrss.github.io/FreshRSS/en/admins/10_ServerConfig.html)
+=====
+<VirtualHost *:80>
+	DocumentRoot /var/www/html/
+
+	#Default site...
+
+	ErrorLog ${APACHE_LOG_DIR}/error.default.log
+	CustomLog ${APACHE_LOG_DIR}/access.default.log vhost_combined
+</VirtualHost>
+
+<VirtualHost *:80>
+	ServerName rss.example.net
+	DocumentRoot /path/to/FreshRSS/p/
+
+	<Directory /path/to/FreshRSS/p>
+		AllowOverride AuthConfig FileInfo Indexes Limit
+		Require all granted
+	</Directory>
+
+	ErrorLog ${APACHE_LOG_DIR}/freshrss_error.log
+	# Consider piping the logs for cleaning passwords; cf. comment higher up.
+	CustomLog ${APACHE_LOG_DIR}/freshrss_access.log combined
+
+	AllowEncodedSlashes On
+</VirtualHost>
+=====
+Once you’re done, create a symbolic link from this file to the sites-enabled folder:
+
+>sudo ln -s /etc/apache2/sites-available/freshrss.conf /etc/apache2/sites-enabled/freshrss.conf
+
+Next, install PHP and the necessary modules
+
+>sudo apt install php php-curl php-gmp php-intl php-mbstring php-sqlite3 php-xml php-zip
+
+Install the PHP module for Apache
+
+>sudo apt install libapache2-mod-php
+
+Finally, restart MySQL and the web server
+
+service apache2 restart
+
+Part 2: Installing FreshRSS
+
+Begin by installing git, if you don’t already have it installed.
+
+>sudo apt install git
+Next, change to the install directory and download FreshRSS using git
+
+>cd /usr/share/
+>sudo git clone https://github.com/FreshRSS/FreshRSS.git
+Change to the new FreshRSS directory, and set the permissions so that your Web server can access the files
+
+>cd FreshRSS
+>sudo cli/access-permissions.sh
+Optional: If you would like to allow updates from the Web interface, set write permissions
+
+chmod -R g+w .
+Finally, symlink the public folder to the root of your web directory
+
+ln -s /usr/share/FreshRSS/p /var/www/html/
+
+Now you can point your browser to FreshRSS
+http://localhost/p
+And follow the steps to configure FreshRSS - use sqlite3 as database since we didn't install mySQL earlier
