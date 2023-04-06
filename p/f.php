@@ -4,7 +4,7 @@ require(LIB_PATH . '/lib_rss.php');	//Includes class autoloader
 require(LIB_PATH . '/favicons.php');
 require(LIB_PATH . '/http-conditional.php');
 
-function show_default_favicon($cacheSeconds = 3600) {
+function show_default_favicon(int $cacheSeconds = 3600): void {
 	$default_mtime = @filemtime(DEFAULT_FAVICON);
 	if (!httpConditional($default_mtime, $cacheSeconds, 2)) {
 		header('Content-Type: image/x-icon');
@@ -32,6 +32,10 @@ if ($ico_mtime == false || $ico_mtime < $txt_mtime || ($ico_mtime < time() - (mt
 
 	// no ico file or we should download a new one.
 	$url = file_get_contents($txt);
+	if ($url === false) {
+		show_default_favicon(1800);
+		exit();
+	}
 	if (!download_favicon($url, $ico)) {
 		// Download failed
 		if ($ico_mtime == false) {

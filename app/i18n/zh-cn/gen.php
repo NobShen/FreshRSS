@@ -150,6 +150,7 @@ return array(
 		'it' => 'Italiano',	// IGNORE
 		'ja' => '日本語',	// IGNORE
 		'ko' => '한국어',	// IGNORE
+		'lv' => 'Latviešu',	// IGNORE
 		'nl' => 'Nederlands',	// IGNORE
 		'oc' => 'Occitan',	// IGNORE
 		'pl' => 'Polski',	// IGNORE
@@ -174,6 +175,7 @@ return array(
 		'queries' => '自定义查询',
 		'reading' => '阅读',
 		'search' => '搜索内容或#标签',
+		'search_help' => 'See documentation for advanced <a href="https://freshrss.github.io/FreshRSS/en/users/10_filter.html#with-the-search-field" target="_blank">search parameters</a>',	// TODO
 		'sharing' => '分享',
 		'shortcuts' => '快捷键',
 		'stats' => '统计',
@@ -191,6 +193,7 @@ return array(
 	),
 	'share' => array(
 		'Known' => '基于 Known 的站点',
+		'archiveORG' => 'archive.org',	// IGNORE
 		'archivePH' => 'archive.ph',	// IGNORE
 		'blogotext' => 'Blogotext',	// IGNORE
 		'clipboard' => '剪贴板',

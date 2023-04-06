@@ -6,10 +6,10 @@
 class FreshRSS_configure_Controller extends FreshRSS_ActionController {
 	/**
 	 * This action is called before every other action in that class. It is
-	 * the common boiler plate for every action. It is triggered by the
+	 * the common boilerplate for every action. It is triggered by the
 	 * underlying framework.
 	 */
-	public function firstAction() {
+	public function firstAction(): void {
 		if (!FreshRSS_Auth::hasAccess()) {
 			Minz_Error::error(403);
 		}
@@ -25,6 +25,7 @@ class FreshRSS_configure_Controller extends FreshRSS_ActionController {
 	 * The options available on the page are:
 	 *   - language (default: en)
 	 *   - theme (default: Origin)
+	 *   - darkMode (default: no)
 	 *   - content width (default: thin)
 	 *   - display of read action in header
 	 *   - display of favorite action in header
@@ -39,16 +40,18 @@ class FreshRSS_configure_Controller extends FreshRSS_ActionController {
 	 *   - html5 notification timeout (default: 0)
 	 * Default values are false unless specified.
 	 */
-	public function displayAction() {
+	public function displayAction(): void {
 		if (Minz_Request::isPost()) {
 			FreshRSS_Context::$user_conf->language = Minz_Request::param('language', 'en');
 			FreshRSS_Context::$user_conf->timezone = Minz_Request::param('timezone', '');
 			FreshRSS_Context::$user_conf->theme = Minz_Request::param('theme', FreshRSS_Themes::$defaultTheme);
+			FreshRSS_Context::$user_conf->darkMode = Minz_Request::param('darkMode', 'no');
 			FreshRSS_Context::$user_conf->content_width = Minz_Request::param('content_width', 'thin');
 			FreshRSS_Context::$user_conf->topline_read = Minz_Request::param('topline_read', false);
 			FreshRSS_Context::$user_conf->topline_favorite = Minz_Request::param('topline_favorite', false);
 			FreshRSS_Context::$user_conf->topline_date = Minz_Request::param('topline_date', false);
 			FreshRSS_Context::$user_conf->topline_link = Minz_Request::param('topline_link', false);
+			FreshRSS_Context::$user_conf->topline_website = Minz_Request::param('topline_website', false);
 			FreshRSS_Context::$user_conf->topline_thumbnail = Minz_Request::param('topline_thumbnail', false);
 			FreshRSS_Context::$user_conf->topline_summary = Minz_Request::param('topline_summary', false);
 			FreshRSS_Context::$user_conf->topline_display_authors = Minz_Request::param('topline_display_authors', false);
@@ -102,37 +105,37 @@ class FreshRSS_configure_Controller extends FreshRSS_ActionController {
 	 *       - received
 	 * Default values are false unless specified.
 	 */
-	public function readingAction() {
+	public function readingAction(): void {
 		if (Minz_Request::isPost()) {
 			FreshRSS_Context::$user_conf->posts_per_page = Minz_Request::param('posts_per_page', 10);
 			FreshRSS_Context::$user_conf->view_mode = Minz_Request::param('view_mode', 'normal');
 			FreshRSS_Context::$user_conf->default_view = Minz_Request::param('default_view', 'adaptive');
-			FreshRSS_Context::$user_conf->show_fav_unread = Minz_Request::param('show_fav_unread', false);
-			FreshRSS_Context::$user_conf->auto_load_more = Minz_Request::param('auto_load_more', false);
-			FreshRSS_Context::$user_conf->display_posts = Minz_Request::param('display_posts', false);
+			FreshRSS_Context::$user_conf->show_fav_unread = Minz_Request::paramBoolean('show_fav_unread');
+			FreshRSS_Context::$user_conf->auto_load_more = Minz_Request::paramBoolean('auto_load_more');
+			FreshRSS_Context::$user_conf->display_posts = Minz_Request::paramBoolean('display_posts');
 			FreshRSS_Context::$user_conf->display_categories = Minz_Request::param('display_categories', 'active');
 			FreshRSS_Context::$user_conf->show_tags = Minz_Request::param('show_tags', '0');
 			FreshRSS_Context::$user_conf->show_tags_max = Minz_Request::param('show_tags_max', '0');
 			FreshRSS_Context::$user_conf->show_author_date = Minz_Request::param('show_author_date', '0');
 			FreshRSS_Context::$user_conf->show_feed_name = Minz_Request::param('show_feed_name', 't');
-			FreshRSS_Context::$user_conf->hide_read_feeds = Minz_Request::param('hide_read_feeds', false);
-			FreshRSS_Context::$user_conf->onread_jump_next = Minz_Request::param('onread_jump_next', false);
-			FreshRSS_Context::$user_conf->lazyload = Minz_Request::param('lazyload', false);
-			FreshRSS_Context::$user_conf->sides_close_article = Minz_Request::param('sides_close_article', false);
-			FreshRSS_Context::$user_conf->sticky_post = Minz_Request::param('sticky_post', false);
-			FreshRSS_Context::$user_conf->reading_confirm = Minz_Request::param('reading_confirm', false);
-			FreshRSS_Context::$user_conf->auto_remove_article = Minz_Request::param('auto_remove_article', false);
-			FreshRSS_Context::$user_conf->mark_updated_article_unread = Minz_Request::param('mark_updated_article_unread', false);
+			FreshRSS_Context::$user_conf->hide_read_feeds = Minz_Request::paramBoolean('hide_read_feeds');
+			FreshRSS_Context::$user_conf->onread_jump_next = Minz_Request::paramBoolean('onread_jump_next');
+			FreshRSS_Context::$user_conf->lazyload = Minz_Request::paramBoolean('lazyload');
+			FreshRSS_Context::$user_conf->sides_close_article = Minz_Request::paramBoolean('sides_close_article');
+			FreshRSS_Context::$user_conf->sticky_post = Minz_Request::paramBoolean('sticky_post');
+			FreshRSS_Context::$user_conf->reading_confirm = Minz_Request::paramBoolean('reading_confirm');
+			FreshRSS_Context::$user_conf->auto_remove_article = Minz_Request::paramBoolean('auto_remove_article');
+			FreshRSS_Context::$user_conf->mark_updated_article_unread = Minz_Request::paramBoolean('mark_updated_article_unread');
 			FreshRSS_Context::$user_conf->sort_order = Minz_Request::param('sort_order', 'DESC');
 			FreshRSS_Context::$user_conf->mark_when = array(
-				'article' => Minz_Request::param('mark_open_article', false),
-				'gone' => Minz_Request::param('read_upon_gone', false),
+				'article' => Minz_Request::paramBoolean('mark_open_article'),
+				'gone' => Minz_Request::paramBoolean('read_upon_gone'),
 				'max_n_unread' => Minz_Request::paramBoolean('enable_keep_max_n_unread') ? Minz_Request::param('keep_max_n_unread', false) : false,
-				'reception' => Minz_Request::param('mark_upon_reception', false),
+				'reception' => Minz_Request::paramBoolean('mark_upon_reception'),
 				'same_title_in_feed' => Minz_Request::paramBoolean('enable_read_when_same_title_in_feed') ?
 					Minz_Request::param('read_when_same_title_in_feed', false) : false,
-				'scroll' => Minz_Request::param('mark_scroll', false),
-				'site' => Minz_Request::param('mark_open_site', false),
+				'scroll' => Minz_Request::paramBoolean('mark_scroll'),
+				'site' => Minz_Request::paramBoolean('mark_open_site'),
 			);
 			FreshRSS_Context::$user_conf->save();
 			invalidateHttpCache();
@@ -153,7 +156,7 @@ class FreshRSS_configure_Controller extends FreshRSS_ActionController {
 	 * Before v1.16, we used sharing instead of integration. This has
 	 * some unwanted behavior when the end-user was using an ad-blocker.
 	 */
-	public function integrationAction() {
+	public function integrationAction(): void {
 		FreshRSS_View::appendScript(Minz_Url::display('/scripts/integration.js?' . @filemtime(PUBLIC_PATH . '/scripts/integration.js')));
 		FreshRSS_View::appendScript(Minz_Url::display('/scripts/draggable.js?' . @filemtime(PUBLIC_PATH . '/scripts/draggable.js')));
 
@@ -181,7 +184,7 @@ class FreshRSS_configure_Controller extends FreshRSS_ActionController {
 	 * escape, home, insert, left, page down, page up, return, right, space,
 	 * tab and up.
 	 */
-	public function shortcutAction() {
+	public function shortcutAction(): void {
 		$this->view->list_keys = SHORTCUT_KEYS;
 
 		if (Minz_Request::isPost()) {
@@ -212,7 +215,7 @@ class FreshRSS_configure_Controller extends FreshRSS_ActionController {
 	 *   - number of article to retain per feed (default: 0)
 	 *   - refresh frequency (default: 0)
 	 */
-	public function archivingAction() {
+	public function archivingAction(): void {
 		if (Minz_Request::isPost()) {
 			if (!Minz_Request::paramBoolean('enable_keep_max')) {
 				$keepMax = false;
@@ -283,7 +286,7 @@ class FreshRSS_configure_Controller extends FreshRSS_ActionController {
 	 * configuration page and verifies that every user query is runable by
 	 * checking if categories and feeds are still in use.
 	 */
-	public function queriesAction() {
+	public function queriesAction(): void {
 		FreshRSS_View::appendScript(Minz_Url::display('/scripts/draggable.js?' . @filemtime(PUBLIC_PATH . '/scripts/draggable.js')));
 
 		$category_dao = FreshRSS_Factory::createCategoryDao();
@@ -321,7 +324,7 @@ class FreshRSS_configure_Controller extends FreshRSS_ActionController {
 		$id = Minz_Request::param('id');
 		$this->view->displaySlider = false;
 		if (false !== $id) {
-			$id = intval($id);
+			$id = (int)$id;
 			$this->view->displaySlider = true;
 			$this->view->query = $this->view->queries[$id];
 			$this->view->queryId = $id;
@@ -335,7 +338,7 @@ class FreshRSS_configure_Controller extends FreshRSS_ActionController {
 	 * It displays the query configuration page and handles modifications
 	 * applied to the selected query.
 	 */
-	public function queryAction() {
+	public function queryAction(): void {
 		$this->view->_layout(false);
 
 		$id = Minz_Request::param('id');
@@ -384,7 +387,7 @@ class FreshRSS_configure_Controller extends FreshRSS_ActionController {
 	/**
 	 * Handles query deletion
 	 */
-	public function deleteQueryAction() {
+	public function deleteQueryAction(): void {
 		$id = Minz_Request::param('id');
 		if (false === $id || !isset(FreshRSS_Context::$user_conf->queries[$id])) {
 			Minz_Error::error(404);
@@ -406,7 +409,7 @@ class FreshRSS_configure_Controller extends FreshRSS_ActionController {
 	 * storage. Before it is saved, the unwanted parameters are unset to keep
 	 * lean data.
 	 */
-	public function bookmarkQueryAction() {
+	public function bookmarkQueryAction(): void {
 		$category_dao = FreshRSS_Factory::createCategoryDao();
 		$feed_dao = FreshRSS_Factory::createFeedDao();
 		$tag_dao = FreshRSS_Factory::createTagDao();
@@ -444,7 +447,7 @@ class FreshRSS_configure_Controller extends FreshRSS_ActionController {
 	 *
 	 * The `force-email-validation` is ignored with PHP < 5.5
 	 */
-	public function systemAction() {
+	public function systemAction(): void {
 		if (!FreshRSS_Auth::hasAccess('admin')) {
 			Minz_Error::error(403);
 		}

@@ -39,6 +39,7 @@ class FreshRSS_View extends Minz_View {
 	public $details;
 	public $disable_aside;
 	public $show_email_field;
+	/** @var string */
 	public $username;
 	public $users;
 
@@ -113,10 +114,15 @@ class FreshRSS_View extends Minz_View {
 	public $selectorSuccess;
 
 	// Extensions
+	/** @var array<string,array{'name':string,'author':string,'description':string,'version':string,'entrypoint':string,'type':'system'|'user','url':string,'method':string,'directory':string}> */
 	public $available_extensions;
+	/** @var ?Minz_Extension */
 	public $ext_details;
+	/** @var array{'system':array<Minz_Extension>,'user':array<Minz_Extension>} */
 	public $extension_list;
+	/** @var ?Minz_Extension */
 	public $extension;
+	/** @var array<string,string> */
 	public $extensions_installed;
 
 	// Errors

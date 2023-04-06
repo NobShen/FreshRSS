@@ -10,10 +10,11 @@ class FreshRSS_BooleanSearch {
 	/** @var array<FreshRSS_BooleanSearch|FreshRSS_Search> */
 	private $searches = array();
 
-	/** @var string 'AND' or 'OR' or 'AND NOT' */
+	/** @var 'AND'|'OR'|'AND NOT' */
 	private $operator;
 
-	public function __construct(string $input, int $level = 0, $operator = 'AND') {
+	/** @param 'AND'|'OR'|'AND NOT' $operator */
+	public function __construct(string $input, int $level = 0, string $operator = 'AND') {
 		$this->operator = $operator;
 		$input = trim($input);
 		if ($input == '') {
@@ -118,8 +119,9 @@ class FreshRSS_BooleanSearch {
 		$nextOperator = 'AND';
 		while ($i < $length) {
 			$c = $input[$i];
+			$backslashed = $i >= 1 ? $input[$i - 1] === '\\' : false;
 
-			if ($c === '(') {
+			if ($c === '(' && !$backslashed) {
 				$hasParenthesis = true;
 
 				$before = trim($before);
@@ -164,11 +166,12 @@ class FreshRSS_BooleanSearch {
 				$i++;
 				while ($i < $length) {
 					$c = $input[$i];
-					if ($c === '(') {
+					$backslashed = $input[$i - 1] === '\\';
+					if ($c === '(' && !$backslashed) {
 						// One nested level deeper
 						$parentheses++;
 						$sub .= $c;
-					} elseif ($c === ')') {
+					} elseif ($c === ')' && !$backslashed) {
 						$parentheses--;
 						if ($parentheses === 0) {
 							// Found the matching closing parenthesis
@@ -219,7 +222,7 @@ class FreshRSS_BooleanSearch {
 		return false;
 	}
 
-	private function parseOrSegments(string $input) {
+	private function parseOrSegments(string $input): void {
 		$input = trim($input);
 		if ($input == '') {
 			return;
@@ -256,13 +259,13 @@ class FreshRSS_BooleanSearch {
 		return $this->searches;
 	}
 
-	/** @return string 'AND' or 'OR' depending on how this BooleanSearch should be combined */
+	/** @return 'AND'|'OR'|'AND NOT' depending on how this BooleanSearch should be combined */
 	public function operator(): string {
 		return $this->operator;
 	}
 
 	/** @param FreshRSS_BooleanSearch|FreshRSS_Search $search */
-	public function add($search) {
+	public function add($search): void {
 		$this->searches[] = $search;
 	}
 

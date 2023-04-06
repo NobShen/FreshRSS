@@ -150,6 +150,7 @@ return array(
 		'it' => 'Italiano',	// IGNORE
 		'ja' => '日本語',	// IGNORE
 		'ko' => '한국어',	// IGNORE
+		'lv' => 'Latviešu',	// IGNORE
 		'nl' => 'Nederlands',	// IGNORE
 		'oc' => 'Occitan',	// IGNORE
 		'pl' => 'Polski',	// IGNORE
@@ -174,6 +175,7 @@ return array(
 		'queries' => 'Ricerche personali',
 		'reading' => 'Lettura',
 		'search' => 'Ricerca parole o #tags',
+		'search_help' => 'See documentation for advanced <a href="https://freshrss.github.io/FreshRSS/en/users/10_filter.html#with-the-search-field" target="_blank">search parameters</a>',	// TODO
 		'sharing' => 'Condivisione',
 		'shortcuts' => 'Comandi tastiera',
 		'stats' => 'Statistiche',
@@ -191,6 +193,7 @@ return array(
 	),
 	'share' => array(
 		'Known' => 'Siti basati su Known',
+		'archiveORG' => 'archive.org',	// IGNORE
 		'archivePH' => 'archive.ph',	// IGNORE
 		'blogotext' => 'Blogotext',	// IGNORE
 		'clipboard' => 'Appunti',

@@ -4,14 +4,14 @@ class FreshRSS_update_Controller extends FreshRSS_ActionController {
 
 	const LASTUPDATEFILE = 'last_update.txt';
 
-	public static function isGit() {
+	public static function isGit(): bool {
 		return is_dir(FRESHRSS_PATH . '/.git/');
 	}
 
 	/**
 	 * Automatic change to the new name of edge branch since FreshRSS 1.18.0.
 	 */
-	public static function migrateToGitEdge() {
+	public static function migrateToGitEdge(): bool {
 		$errorMessage = 'Error during git checkout to edge branch. Please change branch manually!';
 
 		if (!is_writable(FRESHRSS_PATH . '/.git/config')) {
@@ -23,7 +23,7 @@ class FreshRSS_update_Controller extends FreshRSS_ActionController {
 		if ($return != 0) {
 			throw new Exception($errorMessage);
 		}
-		$line = is_array($output) ? implode('', $output) : $output;
+		$line = implode('', $output);
 		if ($line !== 'master' && $line !== 'dev') {
 			return true;	// not on master or dev, nothing to do
 		}
@@ -44,7 +44,7 @@ class FreshRSS_update_Controller extends FreshRSS_ActionController {
 		return true;
 	}
 
-	public static function hasGitUpdate() {
+	public static function hasGitUpdate(): bool {
 		$cwd = getcwd();
 		chdir(FRESHRSS_PATH);
 		$output = array();
@@ -54,18 +54,19 @@ class FreshRSS_update_Controller extends FreshRSS_ActionController {
 				$output = [];
 				exec('git status -sb --porcelain remote', $output, $return);
 			} else {
-				$line = is_array($output) ? implode('; ', $output) : $output;
+				$line = implode('; ', $output);
 				Minz_Log::warning('git fetch warning: ' . $line);
 			}
 		} catch (Exception $e) {
 			Minz_Log::warning('git fetch error: ' . $e->getMessage());
 		}
 		chdir($cwd);
-		$line = is_array($output) ? implode('; ', $output) : $output;
+		$line = implode('; ', $output);
 		return $line == '' ||
 			strpos($line, '[behind') !== false || strpos($line, '[ahead') !== false || strpos($line, '[gone') !== false;
 	}
 
+	/** @return string|true */
 	public static function gitPull() {
 		$cwd = getcwd();
 		chdir(FRESHRSS_PATH);
@@ -92,7 +93,7 @@ class FreshRSS_update_Controller extends FreshRSS_ActionController {
 		return $return == 0 ? true : 'Git error: ' . $line;
 	}
 
-	public function firstAction() {
+	public function firstAction(): void {
 		if (!FreshRSS_Auth::hasAccess('admin')) {
 			Minz_Error::error(403);
 		}
@@ -109,7 +110,7 @@ class FreshRSS_update_Controller extends FreshRSS_ActionController {
 		}
 	}
 
-	public function indexAction() {
+	public function indexAction(): void {
 		FreshRSS_View::prependTitle(_t('admin.update.title') . ' · ');
 
 		if (file_exists(UPDATE_FILENAME)) {
@@ -135,7 +136,7 @@ class FreshRSS_update_Controller extends FreshRSS_ActionController {
 		}
 	}
 
-	public function checkAction() {
+	public function checkAction(): void {
 		$this->view->_path('update/index.phtml');
 
 		if (file_exists(UPDATE_FILENAME)) {
@@ -216,7 +217,7 @@ class FreshRSS_update_Controller extends FreshRSS_ActionController {
 		}
 	}
 
-	public function applyAction() {
+	public function applyAction(): void {
 		if (FreshRSS_Context::$system_conf->disable_update || !file_exists(UPDATE_FILENAME) || !touch(FRESHRSS_PATH . '/index.html')) {
 			Minz_Request::forward(array('c' => 'update'), true);
 		}
@@ -278,7 +279,7 @@ class FreshRSS_update_Controller extends FreshRSS_ActionController {
 	/**
 	 * This action displays information about installation.
 	 */
-	public function checkInstallAction() {
+	public function checkInstallAction(): void {
 		FreshRSS_View::prependTitle(_t('admin.check_install.title') . ' · ');
 
 		$this->view->status_php = check_install_php();
