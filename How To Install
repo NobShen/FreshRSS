@@ -1,14 +1,34 @@
 Install a minimal Ubuntu 22.04
-ssh server
-lid behavior
 
-Begin by installing apache2:
+(1) Disable lid behavior:
+>sudo nano /etc/systemd/logind.conf
+HandleLidSwitch=ignore
+>sudo systemctl restart systemd-logind
 
+(2) Install ssh server:
+>sudo apt-get install openssh-server
+>sudo systemctl status sshd
+
+(3) Install git:
+>sudo apt install git
+
+(4) Install apache2:
 >sudo apt install apache2
 >sudo a2enmod headers expires rewrite ssl
 
-Then, configure Apache by creating a file in /etc/apache2/sites-available:
->sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/freshrss.conf
+(5) Install FreshRSS:
+
+Next, change to the install directory and download FreshRSS using git
+>cd /usr/share/
+>sudo git clone https://github.com/FreshRSS/FreshRSS.git
+
+(6) Configure FreshRSS by setting the permissions so that your Web server can access the files
+>cd FreshRSS
+>sudo cli/access-permissions.sh
+>sudo chmod -R g+w .
+
+(7) Connect FreshRSS with apache2 by symlink the public folder to the root of your web directory
+>sudo ln -s /usr/share/FreshRSS/p /var/www/html/
 
 Modify freshrss.conf to the following (see https://freshrss.github.io/FreshRSS/en/admins/10_ServerConfig.html)
 =====
@@ -38,40 +58,30 @@ Modify freshrss.conf to the following (see https://freshrss.github.io/FreshRSS/e
 </VirtualHost>
 =====
 
+(8) Configure Apache by creating a file in /etc/apache2/sites-available:
+>sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/freshrss.conf
+
 Once you’re done, create a symbolic link from this file to the sites-enabled folder:
 >sudo ln -s /etc/apache2/sites-available/freshrss.conf /etc/apache2/sites-enabled/freshrss.conf
 
-Next, install PHP and the necessary modules
+(9)  Install PHP and the necessary modules
 >sudo apt install php php-curl php-gmp php-intl php-mbstring php-sqlite3 php-xml php-zip
 
 Install the PHP module for Apache
 >sudo apt install libapache2-mod-php
 
-Finally, restart the web server
+(10) Finally, restart the web server
 >service apache2 restart
-
-Now you can install FreshRSS, first by installing git:
->sudo apt install git
-
-Next, change to the install directory and download FreshRSS using git
->cd /usr/share/
->sudo git clone https://github.com/FreshRSS/FreshRSS.git
-
-Change to the new FreshRSS directory, and set the permissions so that your Web server can access the files
->cd FreshRSS
->sudo cli/access-permissions.sh
->sudo chmod -R g+w .
-
-Finally, symlink the public folder to the root of your web directory
->sudo ln -s /usr/share/FreshRSS/p /var/www/html/
 
 Now you can point your browser to FreshRSS
 http://localhost/p
 And follow the steps to configure FreshRSS - use sqlite3 as database since we didn't install mySQL earlier
 
+(11) Notes:
 The configuration of your instance in ./data/config.custom.php before the install process, or in ./data/config.php after the install process;
 the default configuration for new users in ./data/config-user.custom.php, or in ./data/users/*/config.php for existing users;
 the default set of feeds for new users in ./data/opml.xml.
-Make sure to expose only the ./p/ folder to the Web, as the other directories contain personal and sensitive data. ↩
+Make sure to expose only the ./p/ folder to the Web, as the other directories contain personal and sensitive data.
+You can create users using the cli.
 
 If you wish to allow updates from the web interface, also give group write permissions to this folder.
