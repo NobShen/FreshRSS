@@ -24,11 +24,14 @@ Next, change to the install directory and download FreshRSS using git
 
 (6) Configure FreshRSS by setting the permissions so that your Web server can access the files
 >cd FreshRSS
->sudo cli/access-permissions.sh
+>sudo ./cli/access-permissions.sh
 >sudo chmod -R g+w .
 
 (7) Connect FreshRSS with apache2 by symlink the public folder to the root of your web directory
 >sudo ln -s /usr/share/FreshRSS/p /var/www/html/
+
+(8) Configure Apache by creating a file in /etc/apache2/sites-available:
+>sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/freshrss.conf
 
 Modify freshrss.conf to the following (see https://freshrss.github.io/FreshRSS/en/admins/10_ServerConfig.html)
 =====
@@ -45,7 +48,7 @@ Modify freshrss.conf to the following (see https://freshrss.github.io/FreshRSS/e
 	ServerName rss.example.net
 	DocumentRoot /usr/share/FreshRSS/p/
 
-	<Directory /path/to/FreshRSS/p>
+	<Directory /usr/share/FreshRSS/p>
 		AllowOverride AuthConfig FileInfo Indexes Limit
 		Require all granted
 	</Directory>
@@ -57,9 +60,6 @@ Modify freshrss.conf to the following (see https://freshrss.github.io/FreshRSS/e
 	AllowEncodedSlashes On
 </VirtualHost>
 =====
-
-(8) Configure Apache by creating a file in /etc/apache2/sites-available:
->sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/freshrss.conf
 
 Once you’re done, create a symbolic link from this file to the sites-enabled folder:
 >sudo ln -s /etc/apache2/sites-available/freshrss.conf /etc/apache2/sites-enabled/freshrss.conf
