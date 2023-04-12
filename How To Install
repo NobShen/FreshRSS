@@ -85,3 +85,15 @@ Make sure to expose only the ./p/ folder to the Web, as the other directories co
 You can create users using the cli.
 
 If you wish to allow updates from the web interface, also give group write permissions to this folder.
+
+Install yt-dlp to download:
+
+sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp
+sudo chmod a+rx /usr/local/bin/yt-dlp  # Make executable
+sudo wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -O /usr/local/bin/yt-dlp
+sudo chmod a+rx /usr/local/bin/yt-dlp  # Make executable
+sudo aria2c https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp --dir /usr/local/bin -o yt-dlp
+sudo chmod a+rx /usr/local/bin/yt-dlp  # Make executable
+To update, run:
+
+sudo yt-dlp -U
