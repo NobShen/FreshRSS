@@ -5,7 +5,7 @@ class FreshRSS_StatsDAOPGSQL extends FreshRSS_StatsDAO {
 	/**
 	 * Calculates the number of article per hour of the day per feed
 	 *
-	 * @param integer $feed id
+	 * @param int $feed id
 	 * @return array<int,int>
 	 */
 	public function calculateEntryRepartitionPerFeedPerHour(?int $feed = null): array {
@@ -47,8 +47,10 @@ GROUP BY period
 ORDER BY period ASC
 SQL;
 
-		$stm = $this->pdo->query($sql);
-		$res = $stm->fetchAll(PDO::FETCH_NAMED);
+		$res = $this->fetchAssoc($sql);
+		if ($res == null) {
+			return [];
+		}
 
 		switch ($period) {
 			case 'hour':
@@ -66,7 +68,7 @@ SQL;
 
 		$repartition = array_fill(0, $periodMax, 0);
 		foreach ($res as $value) {
-			$repartition[(int) $value['period']] = (int) $value['count'];
+			$repartition[(int)$value['period']] = (int)$value['count'];
 		}
 
 		return $repartition;

@@ -113,7 +113,7 @@ final class FeverDAO extends Minz_ModelPdo
 		$sql .= ' LIMIT 50';
 
 		$stm = $this->pdo->prepare($sql);
-		if ($stm && $stm->execute($values)) {
+		if ($stm !== false && $stm->execute($values)) {
 			$result = $stm->fetchAll(PDO::FETCH_ASSOC);
 
 			$entries = array();
@@ -336,9 +336,8 @@ final class FeverAPI
 		$groups = array();
 
 		$categoryDAO = FreshRSS_Factory::createCategoryDao();
-		$categories = $categoryDAO->listCategories(false, false);
+		$categories = $categoryDAO->listCategories(false, false) ?: [];
 
-		/** @var FreshRSS_Category $category */
 		foreach ($categories as $category) {
 			$groups[] = array(
 				'id' => $category->id(),
@@ -375,10 +374,7 @@ final class FeverAPI
 		return $favicons;
 	}
 
-	/**
-	 * @return int|false
-	 */
-	private function getTotalItems() {
+	private function getTotalItems(): int {
 		return $this->entryDAO->count();
 	}
 
@@ -420,38 +416,38 @@ final class FeverAPI
 	}
 
 	private function getUnreadItemIds(): string {
-		$entries = $this->entryDAO->listIdsWhere('a', 0, FreshRSS_Entry::STATE_NOT_READ, 'ASC', 0) ?: [];
+		$entries = $this->entryDAO->listIdsWhere('a', 0, FreshRSS_Entry::STATE_NOT_READ, 'ASC', 0) ?? [];
 		return $this->entriesToIdList($entries);
 	}
 
 	private function getSavedItemIds(): string {
-		$entries = $this->entryDAO->listIdsWhere('a', 0, FreshRSS_Entry::STATE_FAVORITE, 'ASC', 0) ?: [];
+		$entries = $this->entryDAO->listIdsWhere('a', 0, FreshRSS_Entry::STATE_FAVORITE, 'ASC', 0) ?? [];
 		return $this->entriesToIdList($entries);
 	}
 
 	/**
-	 * @return integer|false
+	 * @return int|false
 	 */
 	private function setItemAsRead(string $id) {
 		return $this->entryDAO->markRead($id, true);
 	}
 
 	/**
-	 * @return integer|false
+	 * @return int|false
 	 */
 	private function setItemAsUnread(string $id) {
 		return $this->entryDAO->markRead($id, false);
 	}
 
 	/**
-	 * @return integer|false
+	 * @return int|false
 	 */
 	private function setItemAsSaved(string $id) {
 		return $this->entryDAO->markFavorite($id, true);
 	}
 
 	/**
-	 * @return integer|false
+	 * @return int|false
 	 */
 	private function setItemAsUnsaved(string $id) {
 		return $this->entryDAO->markFavorite($id, false);
@@ -540,7 +536,7 @@ final class FeverAPI
 	}
 
 	/**
-	 * @return integer|false
+	 * @return int|false
 	 */
 	private function setFeedAsRead(int $id, int $before) {
 		$before = $this->convertBeforeToId($before);
@@ -548,7 +544,7 @@ final class FeverAPI
 	}
 
 	/**
-	 * @return integer|false
+	 * @return int|false
 	 */
 	private function setGroupAsRead(int $id, int $before) {
 		$before = $this->convertBeforeToId($before);
