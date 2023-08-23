@@ -92,7 +92,10 @@ class Minz_Url {
 			unset($url['params']['c']);
 			unset($url['params']['a']);
 			foreach ($url['params'] as $key => $param) {
-				$uri .= $separator . urlencode($key) . '=' . urlencode($param);
+				if (!is_string($key) || (!is_string($param) && !is_int($param))) {
+					continue;
+				}
+				$uri .= $separator . urlencode($key) . '=' . urlencode((string)$param);
 				$separator = $and;
 			}
 		}
@@ -119,7 +122,7 @@ class Minz_Url {
 		];
 	}
 
-	/** @param array<string,string|array<string,string>>|null $url */
+	/** @param array{'c'?:string,'a'?:string,'params'?:array<string,mixed>} $url */
 	public static function serialize(?array $url = []): string {
 		if (empty($url)) {
 			return '';

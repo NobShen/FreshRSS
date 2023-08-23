@@ -117,7 +117,7 @@ return [
 		'method' => 'GET',
 	],
 	'linkding' => [
-		'url' => '~URL~/bookmarks/new?url=~LINK~&auto_close',
+		'url' => '~URL~/bookmarks/new?url=~LINK~&title=~TITLE~&auto_close',
 		'transform' => ['rawurlencode'],
 		'help' => 'https://github.com/sissbruecker/linkding/blob/master/docs/how-to.md',
 		'form' => 'advanced',
@@ -140,6 +140,13 @@ return [
 		'url' => '~URL~/?share/~LINK~',
 		'transform' => ['urlencode'],
 		'help' => 'https://movim.eu/',
+		'form' => 'advanced',
+		'method' => 'GET',
+	],
+	'omnivore' => [
+		'url' => '~URL~/api/save?url=~LINK~',
+		'transform' => ['urlencode'],
+		'help' => 'https://omnivore.app/',
 		'form' => 'advanced',
 		'method' => 'GET',
 	],

@@ -107,7 +107,7 @@ class FreshRSS_subscription_Controller extends FreshRSS_ActionController {
 		$feed = $this->view->feeds[$id];
 		$this->view->feed = $feed;
 
-		FreshRSS_View::prependTitle(_t('sub.title.feed_management') . ' · ' . $feed->name() . ' · ');
+		FreshRSS_View::prependTitle($feed->name() . ' · ' . _t('sub.title.feed_management') . ' · ');
 
 		if (Minz_Request::isPost()) {
 			$user = Minz_Request::paramString('http_user_feed' . $id);
@@ -231,7 +231,7 @@ class FreshRSS_subscription_Controller extends FreshRSS_ActionController {
 
 			$feed->_attributes('path_entries_filter', Minz_Request::paramString('path_entries_filter', true));
 
-			$values = array(
+			$values = [
 				'name' => Minz_Request::paramString('name'),
 				'kind' => $feed->kind(),
 				'description' => sanitizeHTML(Minz_Request::paramString('description', true)),
@@ -243,26 +243,26 @@ class FreshRSS_subscription_Controller extends FreshRSS_ActionController {
 				'httpAuth' => $httpAuth,
 				'ttl' => $feed->ttl(true),
 				'attributes' => $feed->attributes(),
-			);
+			];
 
 			invalidateHttpCache();
 
 			$from = Minz_Request::paramString('from');
 			switch ($from) {
 				case 'stats':
-					$url_redirect = array('c' => 'stats', 'a' => 'idle', 'params' => array('id' => $id, 'from' => 'stats'));
+					$url_redirect = ['c' => 'stats', 'a' => 'idle', 'params' => ['id' => $id, 'from' => 'stats']];
 					break;
 				case 'normal':
 				case 'reader':
 					$get = Minz_Request::paramString('get');
 					if ($get) {
-						$url_redirect = array('c' => 'index', 'a' => $from, 'params' => array('get' => $get));
+						$url_redirect = ['c' => 'index', 'a' => $from, 'params' => ['get' => $get]];
 					} else {
-						$url_redirect = array('c' => 'index', 'a' => $from);
+						$url_redirect = ['c' => 'index', 'a' => $from];
 					}
 					break;
 				default:
-					$url_redirect = array('c' => 'subscription', 'params' => array('id' => $id));
+					$url_redirect = ['c' => 'subscription', 'params' => ['id' => $id]];
 			}
 
 			if ($values['url'] != '' && $feedDAO->updateFeed($id, $values) !== false) {
@@ -283,7 +283,9 @@ class FreshRSS_subscription_Controller extends FreshRSS_ActionController {
 	}
 
 	public function categoryAction(): void {
-		$this->view->_layout(null);
+		if (Minz_Request::paramBoolean('ajax')) {
+			$this->view->_layout(null);
+		}
 
 		$categoryDAO = FreshRSS_Factory::createCategoryDao();
 
@@ -294,6 +296,8 @@ class FreshRSS_subscription_Controller extends FreshRSS_ActionController {
 			return;
 		}
 		$this->view->category = $category;
+
+		FreshRSS_View::prependTitle($category->name() . ' · ' . _t('sub.title') . ' · ');
 
 		if (Minz_Request::isPost()) {
 			if (Minz_Request::paramBoolean('use_default_purge_options')) {
@@ -342,7 +346,7 @@ class FreshRSS_subscription_Controller extends FreshRSS_ActionController {
 
 			invalidateHttpCache();
 
-			$url_redirect = array('c' => 'subscription', 'params' => array('id' => $id, 'type' => 'category'));
+			$url_redirect = ['c' => 'subscription', 'params' => ['id' => $id, 'type' => 'category']];
 			if (false !== $categoryDAO->updateCategory($id, $values)) {
 				Minz_Request::good(_t('feedback.sub.category.updated'), $url_redirect);
 			} else {

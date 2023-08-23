@@ -28,7 +28,7 @@ function isImgMime(string $content): bool {
 function downloadHttp(string &$url, array $curlOptions = []): string {
 	syslog(LOG_INFO, 'FreshRSS Favicon GET ' . $url);
 	$url = checkUrl($url);
-	if (!$url) {
+	if ($url == false) {
 		return '';
 	}
 	/** @var CurlHandle $ch */
@@ -41,9 +41,19 @@ function downloadHttp(string &$url, array $curlOptions = []): string {
 			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_ENCODING => '',	//Enable all encodings
 		]);
+
+	FreshRSS_Context::initSystem();
+	$system_conf = FreshRSS_Context::$system_conf;
+	if (isset($system_conf)) {
+		curl_setopt_array($ch, $system_conf->curl_options);
+	}
+
 	curl_setopt_array($ch, $curlOptions);
-	/** @var string $response */
+
 	$response = curl_exec($ch);
+	if (!is_string($response)) {
+		$response = '';
+	}
 	$info = curl_getinfo($ch);
 	curl_close($ch);
 	if (!empty($info['url'])) {
@@ -68,13 +78,14 @@ function searchFavicon(string &$url): string {
 					$href = trim($link->getAttribute('href'));
 					if (substr($href, 0, 2) === '//') {
 						// Case of protocol-relative URLs
-						if (preg_match('%^(https?:)//%i', $url, $matches)) {
+						if (preg_match('%^(https?:)//%i', $url, $matches) === 1) {
 							$href = $matches[1] . $href;
 						} else {
 							$href = 'https:' . $href;
 						}
 					}
-					if (!checkUrl($href, false)) {
+					$checkUrl = checkUrl($href, false);
+					if (is_string($checkUrl)) {
 						$href = SimplePie_IRI::absolutize($url, $href);
 					}
 					$favicon = downloadHttp($href, array(
@@ -109,6 +120,6 @@ function download_favicon(string $url, string $dest): bool {
 			}
 		}
 	}
-	return ($favicon != '' && file_put_contents($dest, $favicon)) ||
+	return ($favicon != '' && file_put_contents($dest, $favicon) > 0) ||
 		@copy(DEFAULT_FAVICON, $dest);
 }
