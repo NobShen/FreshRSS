@@ -18,9 +18,9 @@ HandleLidSwitch=ignore
 
 (5) Install FreshRSS:
 
-Next, change to the install directory and download FreshRSS using git
+Next, change to the install directory and download FreshRSS using git.  Do it from NobShen branch.  Make sure to sync with main branch first before clone.
 >cd /usr/share/
->sudo git clone https://github.com/FreshRSS/FreshRSS.git
+>sudo git clone https://github.com/NobShen/FreshRSS.git
 
 (6) Configure FreshRSS by setting the permissions so that your Web server can access the files
 >cd FreshRSS
