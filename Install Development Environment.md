@@ -42,5 +42,28 @@ https://code.visualstudio.com/docs/setup/linux
 >sudo apt update
 >sudo apt install code
 ```
+In VS Code, install PHP Debug extension.
+Then install git: sudo apt install git
+Once git is installed, clone a repository:
+```
+>cd ~/Downloads
+>git clone https://github.com/NobShen/FreshRSS.git
+```
+Now open VS Code by >code
+Then open the folder where the repository is located.  Open folder ~/Downloads/FreshRSS
+At the top level, create launch.json file.
+In the "configurations" [ section, the port should show 9003 as the connection port for xdebug.
+Now check if Xdebug can single step through a simple php program.  So create a new php file with the content below:
+```
+<?php
+
+/* echo is a print command */
+echo "Hello World!\n";
+echo "Hello again!\n";
+
+?>
+```
+Put a breakpoint at the first statement and press Run and Debug to make sure 
+
 
 
