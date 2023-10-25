@@ -148,7 +148,7 @@ Great, the base setup seems to work!
 
 Now lets try an authenticated call, so add a body to your POST request encoded as `form-data` and one key named `api_key` with the value `your-password-hash`, as follow:
 ```
-curl -X POST http://192.168.254.133/p/api/fever.php
+curl -X POST http://192.168.254.133/p/api/fever.php -d "api_key=a47c65c12018b8f8a549f24522e25f3b"
 ```
 If you see the following then you're all good to go.
 ```
