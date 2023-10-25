@@ -98,7 +98,21 @@ cd /usr/share/FreshRSS
 ./cli/update-user.php --user username [ ... ]
 # Same options as create-user.php, except --no_default_feeds which is only available for create-user.php
 ```
-
+So for example:
+```
+cd /usr/share/FreshRSS
+./cli/create-user.php --user rss --password '5876' --api_password '5678'
+```
+After a user with an api_password is created, you can create a hash of the user:password as follow:
+```
+echo -n rss:5678 | md5sum
+55a3f889d4317f57603834b3d97b818c -
+```
+Use this hash value for subsequent API calls.  If you get "auth":1 then you're authenticated.
+```
+curl -X POST -d "api_key=55a3f889d4317f57603834b3d97b818c" http://192.168.254.133/p/api/fever.php
+{"api_version":3,"auth":1,"last_refreshed_on_time":0}
+```
 
 # Enable Fever API for client
 # FreshRSS - Fever API extension
