@@ -29,6 +29,8 @@ The output may show something like /etc/php/8.2/cli/conf.d/20-xdebug.ini.  Then 
 ```
 zend_extension="xdebug.so"
 xdebug.mode=debug
+xdebug.start_with_request=yes
+xdebug.discover_client_host-1
 ```
 # Now install VS Code
 https://code.visualstudio.com/docs/setup/linux
