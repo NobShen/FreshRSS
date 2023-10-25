@@ -98,7 +98,8 @@ cd /usr/share/FreshRSS
 ./cli/update-user.php --user username [ ... ]
 # Same options as create-user.php, except --no_default_feeds which is only available for create-user.php
 ```
-So for example:
+
+#So for example:
 ```
 cd /usr/share/FreshRSS
 ./cli/create-user.php --user rss --password '5876' --api_password '5678'
