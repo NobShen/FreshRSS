@@ -13,9 +13,15 @@ HandleLidSwitch=ignore
 >sudo apt install git
 
 (4) Install apache2:
+```
 >sudo apt install apache2
 >sudo a2enmod headers expires rewrite ssl
-
+>sudo service apache2 stop
+>sudo apt purge apache2 apache2-utils apache2.2-bin apache2-common
+>sudo apt autoremove
+>whereis apache2
+>sudo rm -rf /etc/apach2
+```
 (5) Install FreshRSS:
 
 Next, change to the install directory and download FreshRSS using git.  Do it from NobShen branch.  Make sure to sync with main branch first before clone.
